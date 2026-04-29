@@ -1,0 +1,1 @@
+bun run check && bun run fl && bun run format:check

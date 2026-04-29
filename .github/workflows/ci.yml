@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: ['main', 'master']
+  pull_request:
+    branches: ['main', 'master']
+
+jobs:
+  check-and-format:
+    name: Check & Format
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dir: [backend, frontend]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install Dependencies
+        working-directory: ${{ matrix.dir }}
+        run: bun install --frozen-lockfile
+
+      - name: Type Check
+        working-directory: ${{ matrix.dir }}
+        run: bun run check
+
+      - name: Format Check
+        working-directory: ${{ matrix.dir }}
+        run: bun run format:check
